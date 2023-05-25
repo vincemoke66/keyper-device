@@ -4,10 +4,8 @@
 // Constants
 #define SS_PIN 5
 #define RST_PIN 2
-
 // Parameters
 const int ipaddress[4] = {103, 97, 67, 25};
-
 // Variables
 byte nuidPICC[4] = {0, 0, 0, 0};
 MFRC522::MIFARE_Key key;
@@ -28,62 +26,57 @@ void setup()
 
 void loop()
 {
-    readRFID();
+    String rfid = "";
+    rfid = readRFID();
+    if (rfid != "")
+    {
+        Serial.println(rfid);
+    }
 }
 
-void readRFID(void)
+String readRFID()
 {
-    // Read RFID card
+    String rfidValue = "";
     for (byte i = 0; i < 6; i++)
     {
         key.keyByte[i] = 0xFF;
     }
-
-    // Look for new 1 card
+    // Look for new 1 cards
     if (!rfid.PICC_IsNewCardPresent())
-        return;
-
-    // Verify if the NUID has been read
+        return "";
+    // Verify if the NUID has been readed
     if (!rfid.PICC_ReadCardSerial())
-        return;
-
-    // Store NUID value
+        return "";
+    // Store NUID into nuidPICC array
     for (byte i = 0; i < 4; i++)
     {
         nuidPICC[i] = rfid.uid.uidByte[i];
     }
-
-    Serial.print(F("RFID In hex: "));
-    printHex(rfid.uid.uidByte, rfid.uid.size);
-    Serial.println();
+    Serial.print(F("RFID In dec: "));
+    rfidValue = arrByteToHexString(rfid.uid.uidByte, rfid.uid.size);
 
     // Halt PICC
     rfid.PICC_HaltA();
-
     // Stop encryption on PCD
     rfid.PCD_StopCrypto1();
+
+    return rfidValue;
 }
 
-/**
-Helper routine to dump a byte array as hex values to Serial.
-*/
-void printHex(byte *buffer, byte bufferSize)
+String arrByteToHexString(byte *buffer, byte bufferSize)
 {
-    for (byte i = 0; i < bufferSize; i++)
-    {
-        Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-        Serial.print(buffer[i], HEX);
-    }
-}
+    String hexString = "";
 
-/**
-Helper routine to dump a byte array as dec values to Serial.
-*/
-void printDec(byte *buffer, byte bufferSize)
-{
     for (byte i = 0; i < bufferSize; i++)
     {
-        Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-        Serial.print(buffer[i], DEC);
+        if (buffer[i] < 0x10)
+        {
+            hexString += '0';
+            continue;
+        }
+
+        hexString += String(buffer[i], HEX);
     }
+
+    return hexString;
 }
