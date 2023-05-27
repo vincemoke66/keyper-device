@@ -11,6 +11,43 @@
 #define SCREEN_ADDRESS 0x3C
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+
+
+/**
+ * Made with Marlin Bitmap Converter
+ * https://marlinfw.org/tools/u8glib/converter.html
+ *
+ * This bitmap from the file 'profile.png'
+ */
+
+const unsigned char profile[] PROGMEM = {
+  0x00,0x78,0x00,
+  0x03,0x87,0x00,
+  0x0C,0x00,0xC0,
+  0x10,0x00,0x20,
+  0x20,0x30,0x10,
+  0x20,0xCC,0x10,
+  0x41,0x02,0x08,
+  0x41,0x02,0x08,
+  0x42,0x01,0x08,
+  0x82,0x01,0x04,
+  0x81,0x02,0x04,
+  0x81,0x02,0x04,
+  0x80,0xCC,0x04,
+  0x40,0x78,0x08,
+  0x41,0x86,0x08,
+  0x42,0x01,0x08,
+  0x24,0x00,0x90,
+  0x2C,0x00,0xD0,
+  0x18,0x00,0x60,
+  0x0C,0x00,0xC0,
+  0x03,0x87,0x00,
+  0x00,0x78,0x00
+};
+
+
+
+
 void setup()
 {
     Serial.begin(9600);
@@ -25,92 +62,33 @@ void setup()
 
     // Clear the buffer.
     display.clearDisplay();
-
-    // Display Text
-    display.setTextSize(1);
+    display.drawBitmap(8, 21, profile, 22, 22, WHITE);
     display.setTextColor(WHITE);
-    display.setCursor(0, 28);
-    display.println("Hello world!");
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Display Inverted Text
-    display.setTextColor(BLACK, WHITE); // 'inverted' text
-    display.setCursor(0, 28);
-    display.println("Hello world!");
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Changing Font Size
-    display.setTextColor(WHITE);
-    display.setCursor(0, 24);
+    display.setCursor(36, 10);
+    display.setTextSize(1);
+    display.print(limitString("sadfasdfdfdsafsdfa", 14));
+    display.setCursor(36, 34);
     display.setTextSize(2);
-    display.println("Hello!");
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Display Numbers
-    display.setTextSize(1);
-    display.setCursor(0, 28);
-    display.println(123456789);
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Specifying Base For Numbers
-    display.setCursor(0, 28);
-    display.print("0x");
-    display.print(0xFF, HEX);
-    display.print("(HEX) = ");
-    display.print(0xFF, DEC);
-    display.println("(DEC)");
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Display ASCII Characters
-    display.setCursor(0, 24);
-    display.setTextSize(2);
-    display.write(3);
-    display.display();
-    delay(2000);
-    display.clearDisplay();
-
-    // Scroll full screen
-    display.setCursor(0, 0);
-    display.setTextSize(1);
-    display.println("Full");
-    display.println("screen");
-    display.println("scrolling!");
-    display.display();
-    display.startscrollright(0x00, 0x07);
-    delay(2000);
-    display.stopscroll();
-    delay(1000);
-    display.startscrollleft(0x00, 0x07);
-    delay(2000);
-    display.stopscroll();
-    delay(1000);
-    display.startscrolldiagright(0x00, 0x07);
-    delay(2000);
-    display.startscrolldiagleft(0x00, 0x07);
-    delay(2000);
-    display.stopscroll();
-    display.clearDisplay();
-
-    // Scroll part of the screen
-    display.setCursor(0, 0);
-    display.setTextSize(1);
-    display.println("Scroll");
-    display.println("some part");
-    display.println("of the screen.");
-    display.display();
-    display.startscrollright(0x00, 0x00);
+    display.print(limitString("3200203", 7));
+    display.display();    
 }
 
 void loop()
 {
+
+}
+
+String limitString(String input, int maxLength)
+{
+    String result = input;
+    if (result.length() > maxLength)
+    {
+        result = result.substring(0, maxLength); // Truncate the string to the maximum length
+        if (maxLength >= 2)
+        {
+            result.remove(maxLength - 2); // Remove the last two characters
+            result += ".."; // Append ".." to the string
+        }
+    }
+    return result;
 }
