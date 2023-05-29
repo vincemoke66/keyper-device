@@ -12,10 +12,10 @@
 #include <Adafruit_SSD1306.h>
 
 /* HTTP REQUEST CONFIGURATION */
-const char *ssid = "Soul Blade";
+const char *ssid = "keyper";
 const char *password = "12345678";
 
-String serverIPAddress = "192.168.101.77";
+String serverIPAddress = "192.168.147.250";
 String serverPort = "8080";
 String apiPath = "http://" + serverIPAddress + ":" + serverPort + "/api";
 
@@ -512,6 +512,7 @@ void loop()
                     break;
                 }
             }
+            skipKeyHandling = true;
         }
 
         if (skipKeyHandling)
