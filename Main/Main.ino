@@ -15,7 +15,7 @@
 const char *ssid = "keyper";
 const char *password = "12345678";
 
-String serverIPAddress = "192.168.147.250";
+String serverIPAddress = "192.168.147.91";
 String serverPort = "8080";
 String apiPath = "http://" + serverIPAddress + ":" + serverPort + "/api";
 
