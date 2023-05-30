@@ -459,6 +459,8 @@ void loop()
         if (responseCode == 200)
         {
             String last_name = valueFromJSON(responseBody, "last_name");
+            String first_name = valueFromJSON(responseBody, "first_name");
+            String full_name = last_name + ", " + first_name;
             String studentSchoolId = valueFromJSON(responseBody, "school_id");
 
             displayProfile(last_name, studentSchoolId);
@@ -760,9 +762,18 @@ void displayProfile(String lastname, String schoolid)
         display.print(limitString(lastname, 7));
     }
 
-    display.setTextSize(2);
-    display.setCursor(36, 34);
-    display.print(limitString(schoolid, 7));
+    if (schoolid.length() > 7)
+    {
+        display.setTextSize(1);
+        display.setCursor(36, 34);
+        display.print(limitString(schoolid, 14));
+    }
+    else
+    {
+        display.setTextSize(2);
+        display.setCursor(36, 34);
+        display.print(limitString(schoolid, 7));
+    }
 
     display.display();
 }
